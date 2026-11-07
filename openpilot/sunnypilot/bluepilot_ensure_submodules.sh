@@ -17,14 +17,19 @@ LIB="opendbc_repo/opendbc/bluepilot_lateral/__init__.py"
 # AGNOS starts openpilot right after the filesystem (comma.service: After=local-fs.target), before
 # wifi has associated, so the fetch fails fast on a cold boot: keep trying until the network is up,
 # for a few minutes. Nothing starts without the library (manager imports opendbc.car.structs).
+# Counted in tries, not by the clock: a cold boot starts with the wall clock behind, so HTTPS fails
+# ("certificate is not yet valid") until time sync jumps it forward, which would end a clock deadline
+# before the first fetch that could work.
 echo "bluepilot: nested bluepilot_lateral submodule missing; fetching (waits for the network)..."
-deadline=$(( $(date +%s) + ${BLUEPILOT_HEAL_TIMEOUT:-180} ))
+tries=$(( ${BLUEPILOT_HEAL_TIMEOUT:-180} / 5 ))
+n=0
 while :; do
   if git submodule update --init --recursive opendbc_repo 2>/tmp/bluepilot_heal.err && [ -f "$LIB" ]; then
     echo "bluepilot: bluepilot_lateral restored"
     exit 0
   fi
-  if [ "$(date +%s)" -ge "$deadline" ]; then break; fi
+  n=$((n + 1))
+  if [ "$n" -ge "$tries" ]; then break; fi
   sleep 5
 done
 echo "bluepilot: WARNING could not fetch bluepilot_lateral (offline?): $(tail -n1 /tmp/bluepilot_heal.err 2>/dev/null); continuing" >&2
