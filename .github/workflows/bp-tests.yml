@@ -16,8 +16,10 @@ jobs:
     if: >-
       (github.repository == 'ford-op/bp-sunnypilot' && github.ref == 'refs/heads/bp-sunnypilot') ||
       (github.repository == 'BluePilotDev/bluepilot' && (github.ref == 'refs/heads/bp-7.1-dev' || github.ref == 'refs/heads/bp-dev'))
-    permissions:
+    permissions:  # what tests.yaml's process replay job asks for; a caller has to grant at least that
       contents: write  # BluePilotDev/bluepilot's process-replay publish step pushes with this token
+      issues: read
+      pull-requests: read
     uses: ./.github/workflows/tests.yaml
     with:
       run_number: ${{ github.run_number }}

@@ -155,6 +155,12 @@ jobs:
       (github.event.pull_request.head.repo.full_name == 'commaai/openpilot'))
       && fromJSON('["namespace-profile-amd64-8x16"]')
       || fromJSON('["ubuntu-24.04"]') }}
+    # BluePilot: the label check reads the PR's labels, and BluePilotDev/bluepilot's publish step pushes the refs with
+    # this token. That repo's default token is read-only for contents alone, so the job asks for what it uses.
+    permissions:
+      contents: write
+      issues: read
+      pull-requests: read
     steps:
     - uses: actions/checkout@v7
     - run: ./tools/op.sh setup
@@ -175,7 +181,7 @@ jobs:
     - name: Run replay
       timeout-minutes: ${{ contains(runner.name, 'nsc') && 2 || 20 }}
       # BluePilot: a merge into the integration branch (or full BluePilot's work branch) publishes new refs whatever the diff
-      continue-on-error: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/bp-sunnypilot' || (github.repository == 'BluePilotDev/bluepilot' && (github.ref == 'refs/heads/bp-7.1-dev' || github.ref == 'refs/heads/bp-dev')) || steps.accepted.outputs.label == 'true' }}
+      continue-on-error: ${{ github.ref == 'refs/heads/master' || github.ref == 'refs/heads/bp-sunnypilot' || (github.repository == 'BluePilotDev/bluepilot' && github.event_name == 'push' && (github.ref == 'refs/heads/bp-7.1-dev' || github.ref == 'refs/heads/bp-dev')) || steps.accepted.outputs.label == 'true' }}
       run: openpilot/selfdrive/test/process_replay/test_processes.py -j$(nproc)
     - name: Print diff
       id: print-diff
