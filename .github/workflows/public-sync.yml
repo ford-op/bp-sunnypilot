@@ -84,5 +84,4 @@ jobs:
         if: steps.gate.outputs.go == 'yes'
         env:
           GH_TOKEN: ${{ steps.apptoken.outputs.token }}
-          SHA: ${{ steps.gate.outputs.sha }}
-        run: gh api repos/BluePilotDev/bluepilot/dispatches -f event_type=bpx-sync -f "client_payload[sha]=$SHA"
+        run: gh api repos/BluePilotDev/bluepilot/dispatches -f event_type=bpx-sync
