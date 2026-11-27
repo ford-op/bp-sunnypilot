@@ -135,7 +135,7 @@ class ControlsExt(ModelStateBase):
     # imported here, not at module level: the key list lives in the opendbc submodule and only
     # Ford needs it, so a submodule on another layout must not break controlsd for other brands
     from opendbc.bluepilot_lateral.core.values_ext import BP_LATERAL_PARAMS
-    # Blendful also centers on the lane lines; while it runs (toggle on, tinygrad model, as modeld_tinygrad
+    # BluePilot: Blendful also centers on the lane lines; while it runs (toggle on, tinygrad model, as modeld_tinygrad
     # launches), Lanefull reaches the car code as off and lane positioning keeps only the In-Lane Offset.
     # The saved settings are not written. Read directly: models.helpers.get_active_model_runner can write params.
     blendful_running = bool(self.params.get("Blendful")) and \

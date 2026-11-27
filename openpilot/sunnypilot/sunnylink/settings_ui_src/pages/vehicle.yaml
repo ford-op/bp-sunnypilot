@@ -107,9 +107,15 @@ sections:
     - type: param
       key: enable_lane_positioning_ang
       equals: true
-    - type: param
-      key: Blendful
-      equals: false
+    # the override applies only while Blendful runs: its toggle on and a non-default model active
+    - type: any
+      conditions:
+      - type: param
+        key: Blendful
+        equals: false
+      - type: capability
+        field: custom_model_active
+        equals: false
   - key: custom_path_offset_ang
     widget: option
     title: '[Lateral Tuning] In-Lane Offset (Angle)'
@@ -197,9 +203,15 @@ sections:
     - type: param
       key: enable_lane_positioning_curv
       equals: true
-    - type: param
-      key: Blendful
-      equals: false
+    # the override applies only while Blendful runs: its toggle on and a non-default model active
+    - type: any
+      conditions:
+      - type: param
+        key: Blendful
+        equals: false
+      - type: capability
+        field: custom_model_active
+        equals: false
   # Stored as 0/1 (INT), so a two-choice button: sunnylink converts a saved value with the param's type
   - key: custom_profile_curv
     widget: multiple_button

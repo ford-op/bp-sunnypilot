@@ -2326,9 +2326,19 @@
               "equals": true
             },
             {
-              "type": "param",
-              "key": "Blendful",
-              "equals": false
+              "type": "any",
+              "conditions": [
+                {
+                  "type": "param",
+                  "key": "Blendful",
+                  "equals": false
+                },
+                {
+                  "type": "capability",
+                  "field": "custom_model_active",
+                  "equals": false
+                }
+              ]
             }
           ]
         },
@@ -2464,9 +2474,19 @@
               "equals": true
             },
             {
-              "type": "param",
-              "key": "Blendful",
-              "equals": false
+              "type": "any",
+              "conditions": [
+                {
+                  "type": "param",
+                  "key": "Blendful",
+                  "equals": false
+                },
+                {
+                  "type": "capability",
+                  "field": "custom_model_active",
+                  "equals": false
+                }
+              ]
             }
           ]
         },
